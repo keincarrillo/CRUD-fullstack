@@ -14,11 +14,7 @@ import { validateBodyReq } from '../utils/validateUpdateProduct'
 import { Error } from '../types/errorsProduct'
 // types
 import type { Request, Response } from 'express'
-import type {
-  Product,
-  ProductParams,
-  ProductParamsGet,
-} from '../types/createProduct'
+import type { Product, ProductParamsGet } from '../types/createProduct'
 
 export const createProduct = async (req: Product, res: Response) => {
   const result = validateProduct(req)
