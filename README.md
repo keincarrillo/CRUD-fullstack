@@ -31,6 +31,7 @@ STORAGE_BUCKET="tu_proyecto.appspot.com"
 MESSAGING_SENDER_ID="tu_messaging_sender_id"
 APP_ID="tu_app_id"
 MEASUREMENT_ID="tu_measurement_id"
+PORT="puerto disponible"
 ```
 
 > **Nota:** Puedes obtener estas credenciales desde la consola de Firebase en Configuración del proyecto > General > Tus aplicaciones.
