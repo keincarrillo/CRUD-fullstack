@@ -1,13 +1,24 @@
 // db
 import db from '../firebase/appFirebase'
-import { collection, addDoc, doc, updateDoc, getDoc } from 'firebase/firestore'
+import {
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  getDoc,
+  getDocs,
+} from 'firebase/firestore'
 // utils
 import { expectedData, validateProduct } from '../utils/validateCreateProduct'
 import { validateBodyReq } from '../utils/validateUpdateProduct'
 import { Error } from '../types/errorsProduct'
 // types
-import type { Response } from 'express'
-import type { Product } from '../types/createProduct'
+import type { Request, Response } from 'express'
+import type {
+  Product,
+  ProductParams,
+  ProductParamsGet,
+} from '../types/createProduct'
 
 export const createProduct = async (req: Product, res: Response) => {
   const result = validateProduct(req)
@@ -50,6 +61,38 @@ export const updateProduct = async (req: Product, res: Response) => {
       res
         .status(200)
         .json({ productId: updatedProduct.id, data: updatedProduct.data() })
+  } catch (error) {
+    console.error(error)
+    res.status(500).send(error)
+  }
+}
+
+export const getProducts = async (req: Request, res: Response) => {
+  try {
+    const products = await getDocs(collection(db, 'products'))
+    products.docs.length <= 0 &&
+      res.status(404).json({ message: 'No hay productos' })
+    const data = products.docs.map(doc => {
+      return {
+        docId: doc.id,
+        ...doc.data(),
+      }
+    })
+    res.status(200).json(data)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send(error)
+  }
+}
+
+export const getProduct = async (req: ProductParamsGet, res: Response) => {
+  const product = doc(db, 'products', req.params.id)
+  try {
+    const docSnap = await getDoc(product)
+    !docSnap.exists() &&
+      res.status(404).json({ message: 'Producto no encontrado' })
+    docSnap.exists() &&
+      res.status(200).json({ docId: docSnap.id, ...docSnap.data() })
   } catch (error) {
     console.error(error)
     res.status(500).send(error)

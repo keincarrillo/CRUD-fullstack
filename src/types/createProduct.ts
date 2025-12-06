@@ -13,4 +13,5 @@ export interface ProductParams {
   id: string
 }
 
+export interface ProductParamsGet extends Request<ProductParams> {}
 export interface Product extends Request<ProductParams, any, ProductBody> {}
