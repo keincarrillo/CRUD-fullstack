@@ -72,12 +72,9 @@ El servidor se ejecutará en `http://localhost:3000` por defecto.
 ## 📝 Mejoras futuras
 
 - [ ] Implementar autenticación y autorización
-- [ ] Agregar endpoint para listar productos
-- [ ] Agregar endpoint para eliminar productos
+- [X] Agregar endpoint para listar productos
+- [X] Agregar endpoint para eliminar productos
 - [ ] Implementar paginación
-- [ ] Agregar tests unitarios e integración
-- [ ] Documentación con Swagger/OpenAPI
-- [ ] Rate limiting
 - [ ] Caché con Redis
 
 ## 📄 Licencia
