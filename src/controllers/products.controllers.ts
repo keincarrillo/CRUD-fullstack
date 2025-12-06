@@ -14,9 +14,9 @@ import { validateBodyReq } from '../utils/validateUpdateProduct'
 import { Error } from '../types/errorsProduct'
 // types
 import type { Request, Response } from 'express'
-import type { Product, ProductParamsGet } from '../types/createProduct'
+import type { ProductBodyReq, ProductParamsReq } from '../types/createProduct'
 
-export const createProduct = async (req: Product, res: Response) => {
+export const createProduct = async (req: ProductBodyReq, res: Response) => {
   const result = validateProduct(req)
   result === Error.MISSING_DATA &&
     res
@@ -42,7 +42,7 @@ export const createProduct = async (req: Product, res: Response) => {
   }
 }
 
-export const updateProduct = async (req: Product, res: Response) => {
+export const updateProduct = async (req: ProductBodyReq, res: Response) => {
   const product = doc(db, 'products', req.params.id)
   try {
     const productData = await getDoc(product)
@@ -81,7 +81,7 @@ export const getProducts = async (req: Request, res: Response) => {
   }
 }
 
-export const getProduct = async (req: ProductParamsGet, res: Response) => {
+export const getProduct = async (req: ProductParamsReq, res: Response) => {
   const product = doc(db, 'products', req.params.id)
   try {
     const docSnap = await getDoc(product)
