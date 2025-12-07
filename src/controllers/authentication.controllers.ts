@@ -6,7 +6,7 @@ import { validateAuthBody } from '../utils/validateAuthBody'
 
 export const singUp = async (req: AuthParamsReq, res: Response) => {
   const validationError = validateAuthBody(req.body)
-  validationError && res.status(400).json({ message: validationError })
+  if (validationError) return res.status(400).json({ message: validationError })
 
   try {
     await createUserWithEmailAndPassword(

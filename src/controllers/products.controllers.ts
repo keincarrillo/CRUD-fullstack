@@ -18,7 +18,7 @@ import type { ProductBodyReq, ProductParamsReq } from '../types/createProduct'
 
 export const createProduct = async (req: ProductBodyReq, res: Response) => {
   const validateBody = validateCreateProduct(req)
-  validateBody && res.status(400).json({ message: validateBody })
+  if (validateBody) return res.status(400).json({ message: validateBody })
 
   const { nombre, marca, precio, descripcion, stock } = req.body
 
@@ -40,14 +40,14 @@ export const createProduct = async (req: ProductBodyReq, res: Response) => {
 export const updateProduct = async (req: ProductBodyReq, res: Response) => {
   const product = doc(db, 'products', req.params.id)
   const validateBody = validateUpdateProduct(req)
-  validateBody && res.status(400).json({ message: validateBody })
+  if (validateBody) return res.status(400).json({ message: validateBody })
+
   try {
     const productData = await getDoc(product)
 
-    !productData.exists() &&
-      res.status(404).json({ message: 'Producto no encontrado' })
+    !productData.exists() && res.sendStatus(404)
 
-    productData.exists() && (await updateDoc(product, req.body))
+    await updateDoc(product, req.body)
 
     const updatedProduct = await getDoc(product)
     updatedProduct.exists() &&
@@ -63,8 +63,7 @@ export const updateProduct = async (req: ProductBodyReq, res: Response) => {
 export const getProducts = async (req: Request, res: Response) => {
   try {
     const products = await getDocs(collection(db, 'products'))
-    products.docs.length <= 0 &&
-      res.status(404).json({ message: 'No hay productos' })
+    if (products.docs.length <= 0) return res.sendStatus(404)
     const data = products.docs.map(doc => {
       return {
         docId: doc.id,
@@ -82,10 +81,8 @@ export const getProduct = async (req: ProductParamsReq, res: Response) => {
   const product = doc(db, 'products', req.params.id)
   try {
     const docSnap = await getDoc(product)
-    !docSnap.exists() &&
-      res.status(404).json({ message: 'Producto no encontrado' })
-    docSnap.exists() &&
-      res.status(200).json({ docId: docSnap.id, ...docSnap.data() })
+    if (!docSnap.exists()) return res.sendStatus(404)
+    res.status(200).json({ docId: docSnap.id, ...docSnap.data() })
   } catch (error) {
     console.error(error)
     res.status(500).send(error)
@@ -96,9 +93,8 @@ export const deleteProduct = async (req: ProductParamsReq, res: Response) => {
   const product = doc(db, 'products', req.params.id)
   try {
     const docSnap = await getDoc(product)
-    !docSnap.exists() &&
-      res.status(404).json({ message: 'Producto no encontrado' })
-    docSnap.exists() && (await deleteDoc(product))
+    if (!docSnap.exists()) return res.sendStatus(404)
+    await deleteDoc(product)
     res.sendStatus(204)
   } catch (error) {
     console.error(error)
