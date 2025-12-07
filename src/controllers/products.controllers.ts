@@ -10,21 +10,15 @@ import {
   deleteDoc,
 } from 'firebase/firestore'
 // utils
-import { expectedData, validateProduct } from '../utils/validateCreateProduct'
-import { validateBodyReq } from '../utils/validateUpdateProduct'
-import { Error } from '../types/errorsProduct'
+import { validateCreateProduct } from '../utils/validateCreateProduct'
+import { validateUpdateProduct } from '../utils/validateUpdateProduct'
 // types
 import type { Request, Response } from 'express'
 import type { ProductBodyReq, ProductParamsReq } from '../types/createProduct'
 
 export const createProduct = async (req: ProductBodyReq, res: Response) => {
-  const result = validateProduct(req)
-  result === Error.MISSING_DATA &&
-    res
-      .status(400)
-      .json({ message: 'No se recibieron datos', reqBody: expectedData })
-  result === Error.NO_DATA &&
-    res.status(400).json({ message: 'Faltan datos', reqBody: expectedData })
+  const validateBody = validateCreateProduct(req)
+  validateBody && res.status(400).json({ message: validateBody })
 
   const { nombre, marca, precio, descripcion, stock } = req.body
 
@@ -45,10 +39,9 @@ export const createProduct = async (req: ProductBodyReq, res: Response) => {
 
 export const updateProduct = async (req: ProductBodyReq, res: Response) => {
   const product = doc(db, 'products', req.params.id)
+  const validateBody = validateUpdateProduct(req)
+  validateBody && res.status(400).json({ message: validateBody })
   try {
-    validateBodyReq(req) === Error.NO_DATA &&
-      res.status(400).json({ message: 'No se recibieron datos' })
-
     const productData = await getDoc(product)
 
     !productData.exists() &&

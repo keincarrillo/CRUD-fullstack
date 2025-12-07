@@ -1,22 +1,10 @@
 import type { ProductParamsReq } from '../types/createProduct'
 import { Error } from '../types/errorsProduct'
 
-export const validateProduct = (product: ProductParamsReq) => {
-  if (!product.body) return Error.NO_DATA
-  if (
-    !product.body.nombre ||
-    !product.body.marca ||
-    !product.body.precio ||
-    !product.body.descripcion ||
-    !product.body.stock
-  )
-    return Error.MISSING_DATA
-}
-
-export const expectedData = {
-  nombre: 'string',
-  marca: 'string',
-  precio: 'number',
-  descripcion: 'string',
-  stock: 'number',
+export const validateCreateProduct = (product: ProductParamsReq) => {
+  if (!product.body.nombre) return Error.NO_NAME
+  if (!product.body.precio) return Error.NO_PRICE
+  if (!product.body.descripcion) return Error.NO_DESCRIPTION
+  if (!product.body.stock) return Error.NO_STOCK
+  if (!product.body.marca) return Error.NO_BRAND
 }
