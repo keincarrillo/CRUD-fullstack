@@ -1,5 +1,5 @@
 // db
-import db from '../firebase/appFirebase'
+import { db } from '../firebase/appFirebase'
 import {
   collection,
   addDoc,
@@ -7,7 +7,7 @@ import {
   updateDoc,
   getDoc,
   getDocs,
-  deleteDoc
+  deleteDoc,
 } from 'firebase/firestore'
 // utils
 import { expectedData, validateProduct } from '../utils/validateCreateProduct'
@@ -34,7 +34,7 @@ export const createProduct = async (req: ProductBodyReq, res: Response) => {
       marca,
       precio,
       descripcion,
-      stock
+      stock,
     })
     res.status(201).json({ docId: docRef.id })
   } catch (error) {
@@ -75,7 +75,7 @@ export const getProducts = async (req: Request, res: Response) => {
     const data = products.docs.map(doc => {
       return {
         docId: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }
     })
     res.status(200).json(data)

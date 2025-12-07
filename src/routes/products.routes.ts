@@ -4,15 +4,15 @@ import {
   getProduct,
   getProducts,
   updateProduct,
-  deleteProduct
+  deleteProduct,
 } from '../controllers/products.controllers'
 
 const router = Router()
 
-router.post('/products', createProduct)
-router.put('/products/:id', updateProduct)
-router.get('/products', getProducts)
-router.get('/products/:id', getProduct)
-router.delete('/products/:id', deleteProduct)
+router.post('/', createProduct)
+router.put('/:id', updateProduct)
+router.get('/', getProducts)
+router.get('/:id', getProduct)
+router.delete('/:id', deleteProduct)
 
 export default router
