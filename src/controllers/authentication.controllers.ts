@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import type { AuthParamsReq } from '../types/authParams'
+import type { AuthParamsReq } from '../types/errorsReq/authParams'
 import type { FirebaseError } from 'firebase/app'
 import {
   createUserWithEmailAndPassword,

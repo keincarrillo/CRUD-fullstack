@@ -1,5 +1,5 @@
-import { Error } from '../types/errors/errorsAuth'
-import type { AuthBody } from '../types/authParams'
+import { Error } from '../types/errorsResFirebase/errorsAuth'
+import type { AuthBody } from '../types/errorsReq/authParams'
 
 export const validateAuthBody = (body: AuthBody) => {
   if (!body) return Error.NO_BODY

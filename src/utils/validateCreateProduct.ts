@@ -1,5 +1,5 @@
-import type { ProductParamsReq } from '../types/createProduct'
-import { Error } from '../types/errors/errorsProduct'
+import type { ProductParamsReq } from '../types/errorsReq/createProduct'
+import { Error } from '../types/errorsResFirebase/errorsProduct'
 
 export const validateCreateProduct = (product: ProductParamsReq) => {
   if (!product.body.nombre) return Error.NO_NAME
