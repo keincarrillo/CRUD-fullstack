@@ -38,6 +38,9 @@ export const singIn = async (req: Request, res: Response) => {
     await signInWithEmailAndPassword(auth, req.body.email, req.body.password)
     res.sendStatus(200)
   } catch (error) {
+    const err = error as FirebaseError
+    const errorResponse = errorsResponseAuth(err)
+    if (errorResponse) return res.status(400).json({ message: errorResponse })
     console.error(error)
     res.status(500).send(error)
   }
