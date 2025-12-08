@@ -1,5 +1,7 @@
 export const enum Error {
-  EMAIL_ALREADY_IN_USE = 'Email already in use',
-  INVALID_EMAIL = 'Invalid email',
-  WEAK_PASSWORD = 'Weak password',
+  EMAIL_ALREADY_IN_USE = 'EMAIL_ALREADY_IN_USE',
+  INVALID_EMAIL = 'INVALID_EMAIL',
+  MISSING_EMAIL = 'MISSING_EMAIL',
+  WEAK_PASSWORD = 'WEAK_PASSWORD',
+  NO_BODY = 'NO_BODY',
 }

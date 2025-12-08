@@ -1,7 +1,10 @@
 import type { Request, Response } from 'express'
 import type { AuthParamsReq } from '../types/authParams'
 import type { FirebaseError } from 'firebase/app'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from 'firebase/auth'
 import { auth } from '../firebase/appFirebase'
 import { validateAuthBody } from '../utils/validateAuthBody'
 import { errorsResponseAuth } from '../utils/errorsResponseAuth'
@@ -27,6 +30,15 @@ export const singUp = async (req: AuthParamsReq, res: Response) => {
   }
 }
 
-export const singIn = (req: Request, res: Response) => {
-  res.send('signin')
+export const singIn = async (req: Request, res: Response) => {
+  const validationError = validateAuthBody(req.body)
+  if (validationError) return res.status(400).json({ message: validationError })
+
+  try {
+    await signInWithEmailAndPassword(auth, req.body.email, req.body.password)
+    res.sendStatus(200)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send(error)
+  }
 }
