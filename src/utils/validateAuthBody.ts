@@ -1,4 +1,4 @@
-import { Error } from '../types/errorsAuth'
+import { Error } from '../types/errors/errorsAuth'
 import type { AuthBody } from '../types/authParams'
 
 export const validateAuthBody = (body: AuthBody) => {

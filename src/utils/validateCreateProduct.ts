@@ -1,5 +1,5 @@
 import type { ProductParamsReq } from '../types/createProduct'
-import { Error } from '../types/errorsProduct'
+import { Error } from '../types/errors/errorsProduct'
 
 export const validateCreateProduct = (product: ProductParamsReq) => {
   if (!product.body.nombre) return Error.NO_NAME

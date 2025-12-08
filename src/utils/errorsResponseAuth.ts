@@ -1,5 +1,5 @@
 import type { FirebaseError } from 'firebase/app'
-import { Error } from '../types/errorsResponseAuth'
+import { Error } from '../types/errors/errorsResponseAuth'
 
 export const errorsResponseAuth = (error: FirebaseError) => {
   switch (error.code) {
