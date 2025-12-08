@@ -13,7 +13,7 @@ server.use(morgan('dev'))
 
 // isAlive?
 server.get('/', (req, res) => {
-  res.status(200).json({ message: 'ok' })
+  res.sendStatus(200)
 })
 
 // Routes
