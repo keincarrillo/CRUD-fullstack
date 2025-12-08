@@ -22,7 +22,7 @@ export const singUp = async (req: AuthParamsReq, res: Response) => {
       req.body.password
     )
 
-    await setDoc(doc(db, `usuarios/${userCredential.user.uid}`), {
+    await setDoc(doc(db, `users/${userCredential.user.uid}`), {
       email: req.body.email,
       rol: req.body.rol,
     })
