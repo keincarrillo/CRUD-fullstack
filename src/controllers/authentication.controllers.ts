@@ -8,17 +8,24 @@ import {
 import { auth } from '../firebase/appFirebase'
 import { validateAuthBody } from '../utils/validateAuthBody'
 import { errorsResponseAuth } from '../utils/errorsResponseAuth'
+import { setDoc, doc } from 'firebase/firestore'
+import { db } from '../firebase/appFirebase'
 
 export const singUp = async (req: AuthParamsReq, res: Response) => {
   const validationError = validateAuthBody(req.body)
   if (validationError) return res.status(400).json({ message: validationError })
 
   try {
-    await createUserWithEmailAndPassword(
+    const userCredential = await createUserWithEmailAndPassword(
       auth,
       req.body.email,
       req.body.password
     )
+
+    await setDoc(doc(db, `usuarios/${userCredential.user.uid}`), {
+      email: req.body.email,
+      rol: req.body.rol,
+    })
 
     res.sendStatus(201)
   } catch (err) {
