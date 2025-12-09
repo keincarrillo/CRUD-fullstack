@@ -63,20 +63,20 @@ El servidor se ejecutará en `http://localhost:3000` por defecto.
 └── .env                 # Variables de entorno (no incluir en git)
 ```
 
-## 🔒 Seguridad
+## Seguridad
 
 - El archivo `.env` está incluido en `.gitignore` para evitar exponer credenciales
 - Nunca compartas tus credenciales de Firebase públicamente
 - Considera implementar reglas de seguridad en Firestore para producción
 
-## 📝 Mejoras futuras
+## Mejoras futuras
 
-- [ ] Implementar autenticación y autorización
+- [x] Implementar autenticación y autorización
 - [X] Agregar endpoint para listar productos
 - [X] Agregar endpoint para eliminar productos
 - [ ] Implementar paginación
 - [ ] Caché con Redis
 
-## 📄 Licencia
+## Licencia
 
 Este proyecto es de código abierto y está disponible bajo la licencia MIT.
