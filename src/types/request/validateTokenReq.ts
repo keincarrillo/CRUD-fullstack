@@ -1,4 +1,4 @@
-export interface JwtPayload {
+export interface MyJwtPayload {
   uid: string
   rol: string
   iat: number

@@ -1,5 +1,7 @@
+// src/types/request/createProduct.ts
 import type { Request } from 'express'
 import type { DocumentData } from 'firebase/firestore'
+import type { ParamsDictionary } from 'express-serve-static-core'
 
 export interface ProductBody extends DocumentData {
   nombre?: string
@@ -13,6 +15,5 @@ export interface ProductParams {
   id: string
 }
 
-export interface ProductParamsReq extends Request<ProductParams> {}
-export interface ProductBodyReq
-  extends Request<ProductParams, any, ProductBody> {}
+export type ProductBodyReq = Request<ParamsDictionary, any, ProductBody>
+export type ProductParamsReq = Request<ParamsDictionary>

@@ -10,10 +10,10 @@ import { verifyRol } from '../middlewares/verifyRol'
 
 const router = Router()
 
-router.post('/', createProduct)
-router.put('/:id', updateProduct)
-router.get('/', getProducts)
-router.get('/:id', getProduct)
-router.delete('/:id', deleteProduct)
+router.post('/', verifyRol('admin'), createProduct)
+router.put('/:id', verifyRol('admin'), updateProduct)
+router.get('/', verifyRol('admin'), getProducts)
+router.get('/:id', verifyRol('admin'), getProduct)
+router.delete('/:id', verifyRol('moderator'), deleteProduct)
 
 export default router

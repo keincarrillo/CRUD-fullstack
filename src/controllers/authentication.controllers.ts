@@ -52,13 +52,9 @@ export const singIn = async (req: AuthParamsReq, res: Response) => {
     const userSnap = await getDoc(doc(db, 'users', userCredential.user.uid))
     const userRol = userSnap.data()?.rol ?? 'user'
 
-    const token = jwt.sign(
-      { uid: userCredential.user.uid, rol: userRol },
-      process.env.JWT_SECRET as string,
-      {
-        expiresIn: '1d',
-      }
-    )
+    const token = jwt.sign({ rol: userRol }, process.env.JWT_SECRET as string, {
+      expiresIn: '1d',
+    })
 
     res
       .cookie('token', token, {
