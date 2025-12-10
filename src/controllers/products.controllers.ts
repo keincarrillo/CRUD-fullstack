@@ -17,7 +17,7 @@ import type { Request, Response } from 'express'
 import type {
   ProductBodyReq,
   ProductParamsReq,
-} from '../types/errorsReq/createProduct'
+} from '../types/request/createProduct'
 
 export const createProduct = async (req: ProductBodyReq, res: Response) => {
   const validateBody = validateCreateProduct(req)
