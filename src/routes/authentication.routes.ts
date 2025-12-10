@@ -3,8 +3,7 @@ import { singIn, singUp } from '../controllers/authentication.controllers'
 
 const router = Router()
 
-router.post('/singup', singUp)
-
-router.post('/singin', singIn)
+router.post('/signup', singUp)
+router.post('/signin', singIn)
 
 export default router

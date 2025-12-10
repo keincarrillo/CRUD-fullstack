@@ -8,8 +8,9 @@ import {
 import { auth } from '../firebase/appFirebase'
 import { validateAuthBody } from '../utils/validateAuthBody'
 import { errorsResponseAuth } from '../utils/errorsResponseAuth'
-import { setDoc, doc } from 'firebase/firestore'
+import { setDoc, doc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase/appFirebase'
+import jwt from 'jsonwebtoken'
 
 export const singUp = async (req: AuthParamsReq, res: Response) => {
   const validationError = validateAuthBody(req.body)
@@ -24,7 +25,7 @@ export const singUp = async (req: AuthParamsReq, res: Response) => {
 
     await setDoc(doc(db, `users/${userCredential.user.uid}`), {
       email: req.body.email,
-      rol: req.body.rol,
+      rol: req.body.rol ?? 'user',
     })
 
     res.sendStatus(201)
@@ -37,13 +38,33 @@ export const singUp = async (req: AuthParamsReq, res: Response) => {
   }
 }
 
-export const singIn = async (req: Request, res: Response) => {
+export const singIn = async (req: AuthParamsReq, res: Response) => {
   const validationError = validateAuthBody(req.body)
   if (validationError) return res.status(400).json({ message: validationError })
 
   try {
-    await signInWithEmailAndPassword(auth, req.body.email, req.body.password)
-    res.sendStatus(200)
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      req.body.email,
+      req.body.password
+    )
+
+    const userSnap = await getDoc(doc(db, 'users', userCredential.user.uid))
+    const userRol = userSnap.data()?.rol ?? 'user'
+
+    const token = jwt.sign(
+      { uid: userCredential.user.uid, rol: userRol },
+      process.env.JWT_SECRET as string,
+      {
+        expiresIn: '1d',
+      }
+    )
+
+    res
+      .cookie('token', token, {
+        httpOnly: true,
+      })
+      .end()
   } catch (error) {
     const err = error as FirebaseError
     const errorResponse = errorsResponseAuth(err)

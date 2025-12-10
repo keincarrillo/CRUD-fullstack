@@ -6,6 +6,7 @@ import {
   updateProduct,
   deleteProduct,
 } from '../controllers/products.controllers'
+import { verifyRol } from '../middlewares/verifyRol'
 
 const router = Router()
 
