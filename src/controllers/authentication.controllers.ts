@@ -60,6 +60,7 @@ export const singIn = async (req: AuthParamsReq, res: Response) => {
       .cookie('token', token, {
         httpOnly: true,
       })
+      .status(202)
       .end()
   } catch (error) {
     const err = error as FirebaseError
