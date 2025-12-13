@@ -74,7 +74,6 @@ El servidor se ejecutará en `http://localhost:3000` por defecto.
 - [x] Implementar autenticación y autorización
 - [X] Agregar endpoint para listar productos
 - [X] Agregar endpoint para eliminar productos
-- [ ] Implementar paginación
 - [ ] Caché con Redis
 
 ## Licencia
