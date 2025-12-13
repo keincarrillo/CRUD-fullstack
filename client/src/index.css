@@ -1,1 +1,13 @@
 @import 'tailwindcss';
+
+@theme {
+  --color-background: #eef2ff; /* fondo general */
+  --color-card: #ffffff; /* tarjeta del formulario */
+  --color-primary: #2563eb; /* azul principal (botones, acentos) */
+  --color-primary-soft: #dbeafe; /* azul clarito para iconos / badges */
+  --color-primary-dark: #1d4ed8; /* hover del botón */
+  --color-text-main: #111827; /* texto principal */
+  --color-text-muted: #6b7280; /* texto secundario */
+  --color-border: #d1d5db; /* bordes inputs */
+  --color-error: #dc2626; /* errores */
+}
