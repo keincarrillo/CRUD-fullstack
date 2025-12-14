@@ -1,7 +1,13 @@
 import Signin from './components/Signin'
+import Signup from './components/Signup'
 
 function App() {
-  return <Signin />
+  return (
+    <>
+      <Signup />
+      <Signin />
+    </>
+  )
 }
 
 export default App

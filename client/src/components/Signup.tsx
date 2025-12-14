@@ -1,15 +1,16 @@
-import type { SigninFormData } from '../types/signinFormType'
+import type { SignupFormData } from '../types/signupFormType'
 import { useForm } from 'react-hook-form'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import userAvatar from '../assets/userAvatar.svg'
 
-const Signin = () => {
+const Signup = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SigninFormData>()
+    watch,
+  } = useForm<SignupFormData>()
 
   const containerRef = useRef<HTMLDivElement>(null)
   const formRef = useRef<HTMLDivElement>(null)
@@ -17,6 +18,8 @@ const Signin = () => {
   const iconRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const password = watch('password')
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -59,7 +62,7 @@ const Signin = () => {
     return () => ctx.revert()
   }, [])
 
-  const onSubmit = async (data: SigninFormData) => {
+  const onSubmit = async (data: SignupFormData) => {
     setIsSubmitting(true)
     console.log('Datos del formulario:', data)
 
@@ -121,11 +124,42 @@ const Signin = () => {
               className="w-12 h-12 object-cover rounded-full"
             />
           </div>
-          <h1 className="text-3xl font-bold text-text-main mb-2">Bienvenido</h1>
-          <p className="text-text-muted">Inicia sesión en tu cuenta</p>
+          <h1 className="text-3xl font-bold text-text-main mb-2">
+            Crear cuenta
+          </h1>
+          <p className="text-text-muted">Regístrate para comenzar</p>
         </div>
 
-        <div ref={formRef} className="space-y-6">
+        <div ref={formRef} className="space-y-5">
+          <div>
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-text-main mb-2"
+            >
+              Nombre completo
+            </label>
+            <input
+              id="name"
+              type="text"
+              {...register('fullName', {
+                required: 'El nombre es obligatorio',
+                minLength: {
+                  value: 3,
+                  message: 'Mínimo 3 caracteres',
+                },
+              })}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
+              className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 outline-none bg-primary-soft text-text-main focus:bg-card"
+              placeholder="Juan Pérez"
+            />
+            {errors.fullName && (
+              <p className="mt-1 text-sm text-error animate-pulse">
+                {errors.fullName.message}
+              </p>
+            )}
+          </div>
+
           <div>
             <label
               htmlFor="email"
@@ -185,6 +219,33 @@ const Signin = () => {
           </div>
 
           <div>
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-text-main mb-2"
+            >
+              Confirmar contraseña
+            </label>
+            <input
+              id="confirmPassword"
+              type="password"
+              {...register('confirmPassword', {
+                required: 'Debes confirmar tu contraseña',
+                validate: value =>
+                  value === password || 'Las contraseñas no coinciden',
+              })}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
+              className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 outline-none bg-primary-soft text-text-main focus:bg-card"
+              placeholder="••••••••"
+            />
+            {errors.confirmPassword && (
+              <p className="mt-1 text-sm text-error animate-pulse">
+                {errors.confirmPassword.message}
+              </p>
+            )}
+          </div>
+
+          <div>
             <button
               ref={buttonRef}
               type="button"
@@ -193,7 +254,7 @@ const Signin = () => {
               className="w-full bg-primary hover:bg-primary-dark text-white py-3 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden group"
             >
               <span className="relative z-10">
-                {isSubmitting ? 'Iniciando...' : 'Iniciar sesión'}
+                {isSubmitting ? 'Creando cuenta...' : 'Crear cuenta'}
               </span>
               <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
             </button>
@@ -202,12 +263,12 @@ const Signin = () => {
 
         <div className="mt-8 text-center">
           <p className="text-sm text-text-muted">
-            ¿No tienes cuenta?{' '}
+            ¿Ya tienes cuenta?{' '}
             <a
               href="#"
               className="text-primary hover:text-primary-dark font-medium relative group"
             >
-              Regístrate aquí
+              Inicia sesión aquí
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
             </a>
           </p>
@@ -217,4 +278,4 @@ const Signin = () => {
   )
 }
 
-export default Signin
+export default Signup
