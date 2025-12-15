@@ -1,0 +1,9 @@
+services:
+  api:
+    build: .
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    mem_limit: 512m
+    cpus: 1.0
