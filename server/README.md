@@ -32,6 +32,7 @@ MESSAGING_SENDER_ID="tu_messaging_sender_id"
 APP_ID="tu_app_id"
 MEASUREMENT_ID="tu_measurement_id"
 PORT="available_port"
+JWT_SECRET='secret'
 ```
 
 > **Nota:** Puedes obtener estas credenciales desde la consola de Firebase en Configuración del proyecto > General > Tus aplicaciones.
@@ -72,8 +73,8 @@ El servidor se ejecutará en `http://localhost:3000` por defecto.
 ## Mejoras futuras
 
 - [x] Implementar autenticación y autorización
-- [X] Agregar endpoint para listar productos
-- [X] Agregar endpoint para eliminar productos
+- [x] Agregar endpoint para listar productos
+- [x] Agregar endpoint para eliminar productos
 - [ ] Implementar paginación
 - [ ] Caché con Redis
 
