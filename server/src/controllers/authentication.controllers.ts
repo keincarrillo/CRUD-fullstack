@@ -3,13 +3,14 @@ import type { FirebaseError } from 'firebase/app'
 import type { AuthParamsReq } from '../types/request/authParams'
 import {
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
+  signInWithEmailAndPassword
 } from 'firebase/auth'
 import { auth } from '../firebase/appFirebase'
 import { validateSignupBody } from '../utils/validateSignupBody'
 import { errorsResponseAuth } from '../utils/errorsResponseAuth'
 import { setDoc, doc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase/appFirebase'
+import clientRedis from '../redis/clientRedis'
 import jwt from 'jsonwebtoken'
 import { validateSigninBody } from '../utils/validateSigninBody'
 
@@ -27,7 +28,7 @@ export const singUp = async (req: AuthParamsReq, res: Response) => {
     await setDoc(doc(db, `users/${userCredential.user.uid}`), {
       name: req.body.name,
       email: req.body.email,
-      rol: req.body.rol ?? 'user',
+      rol: req.body.rol ?? 'user'
     })
 
     res.sendStatus(201)
@@ -51,16 +52,36 @@ export const singIn = async (req: AuthParamsReq, res: Response) => {
       req.body.password
     )
 
-    const userSnap = await getDoc(doc(db, 'users', userCredential.user.uid))
-    const userRol = userSnap.data()?.rol ?? 'user'
+    const uid = userCredential.user.uid || ''
 
-    const token = jwt.sign({ rol: userRol }, process.env.JWT_SECRET as string, {
-      expiresIn: '1d',
+    const cacheRol = `user:${uid}:rol`
+    let userRol = await clientRedis.get(cacheRol)
+
+    if (!userRol) {
+      const userSnap = await getDoc(doc(db, `users/${uid}`))
+      userRol = userSnap.data()?.rol ?? 'user'
+      await clientRedis.set(cacheRol, userRol as string, {
+        EX: 60 * 60 * 24 // 1d
+      })
+    }
+
+    const sid = crypto.randomUUID()
+    const sessionKey = `sess:${sid}`
+    await clientRedis.set(sessionKey, JSON.stringify({ uid, rol: userRol }), {
+      EX: 60 * 60 * 24
     })
+
+    const token = jwt.sign(
+      { uid, rol: userRol, sid },
+      process.env.JWT_SECRET as string,
+      {
+        expiresIn: '1d'
+      }
+    )
 
     res
       .cookie('token', token, {
-        httpOnly: true,
+        httpOnly: true
       })
       .status(202)
       .end()
