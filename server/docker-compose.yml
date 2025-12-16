@@ -7,3 +7,16 @@ services:
       - '3000:3000'
     mem_limit: 512m
     cpus: 1.0
+    depends_on:
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379
+  redis:
+    image: redis
+    restart: unless-stopped
+    command: ['redis-server', '--appendonly', 'yes']
+    ports:
+      - '6379:6379'
+
+volumes:
+  redis_data:
