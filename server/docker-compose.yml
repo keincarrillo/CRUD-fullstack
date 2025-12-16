@@ -1,6 +1,6 @@
 services:
   api:
-    container_name: api
+    container_name: server-api
     build: .
     env_file: .env
     restart: unless-stopped
@@ -13,7 +13,7 @@ services:
     environment:
       - REDIS_URL=redis://redis:6379
   redis:
-    container_name: redis
+    container_name: server-redis
     image: redis
     restart: unless-stopped
     command: ['redis-server', '--appendonly', 'yes']
