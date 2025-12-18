@@ -2,7 +2,6 @@ import type { SigninFormData } from '../types/signinFormType'
 import { useForm } from 'react-hook-form'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
-import userAvatar from '../assets/userAvatar.svg'
 
 const Signin = () => {
   const {
@@ -111,16 +110,6 @@ const Signin = () => {
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-primary to-primary-dark"></div>
 
         <div ref={headerRef} className="text-center mb-8">
-          <div
-            ref={iconRef}
-            className="inline-block p-3 bg-primary-soft rounded-full mb-4 relative"
-          >
-            <img
-              src={userAvatar}
-              alt="User Avatar"
-              className="w-12 h-12 object-cover rounded-full"
-            />
-          </div>
           <h1 className="text-3xl font-bold text-text-main mb-2">Bienvenido</h1>
           <p className="text-text-muted">Inicia sesión en tu cuenta</p>
         </div>
