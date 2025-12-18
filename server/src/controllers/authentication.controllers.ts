@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express'
+import type { Response } from 'express'
 import type { FirebaseError } from 'firebase/app'
 import type { AuthParamsReq } from '../types/request/authParams'
 import {
@@ -6,14 +6,15 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth'
 import { auth } from '../firebase/appFirebase'
-import { validateAuthBody } from '../utils/validateAuthBody'
+import { validateSignupBody } from '../utils/validateSignupBody'
 import { errorsResponseAuth } from '../utils/errorsResponseAuth'
 import { setDoc, doc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase/appFirebase'
 import jwt from 'jsonwebtoken'
+import { validateSigninBody } from '../utils/validateSigninBody'
 
 export const singUp = async (req: AuthParamsReq, res: Response) => {
-  const validationError = validateAuthBody(req.body)
+  const validationError = validateSignupBody(req.body)
   if (validationError) return res.status(400).json({ message: validationError })
 
   try {
@@ -24,6 +25,7 @@ export const singUp = async (req: AuthParamsReq, res: Response) => {
     )
 
     await setDoc(doc(db, `users/${userCredential.user.uid}`), {
+      name: req.body.name,
       email: req.body.email,
       rol: req.body.rol ?? 'user',
     })
@@ -39,7 +41,7 @@ export const singUp = async (req: AuthParamsReq, res: Response) => {
 }
 
 export const singIn = async (req: AuthParamsReq, res: Response) => {
-  const validationError = validateAuthBody(req.body)
+  const validationError = validateSigninBody(req.body)
   if (validationError) return res.status(400).json({ message: validationError })
 
   try {
