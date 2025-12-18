@@ -2,6 +2,7 @@ import type { SigninFormData } from '../types/signinFormType'
 import { useForm } from 'react-hook-form'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
+import { Link } from 'react-router-dom'
 
 const Signin = () => {
   const {
@@ -192,13 +193,13 @@ const Signin = () => {
         <div className="mt-8 text-center">
           <p className="text-sm text-text-muted">
             ¿No tienes cuenta?{' '}
-            <a
-              href="#"
+            <Link
+              to="/signup"
               className="text-primary hover:text-primary-dark font-medium relative group"
             >
               Regístrate aquí
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
-            </a>
+            </Link>
           </p>
         </div>
       </div>
