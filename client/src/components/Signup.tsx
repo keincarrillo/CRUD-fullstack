@@ -2,6 +2,7 @@ import type { SignupFormData } from '../types/signupFormType'
 import { useForm } from 'react-hook-form'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
+import { Link } from 'react-router-dom'
 
 const Signup = () => {
   const {
@@ -130,7 +131,7 @@ const Signup = () => {
             <input
               id="name"
               type="text"
-              {...register('fullName', {
+              {...register('name', {
                 required: 'El nombre es obligatorio',
                 minLength: {
                   value: 3,
@@ -142,9 +143,9 @@ const Signup = () => {
               className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 outline-none bg-primary-soft text-text-main focus:bg-card"
               placeholder="Juan Pérez"
             />
-            {errors.fullName && (
+            {errors.name && (
               <p className="mt-1 text-sm text-error animate-pulse">
-                {errors.fullName.message}
+                {errors.name.message}
               </p>
             )}
           </div>
@@ -253,13 +254,13 @@ const Signup = () => {
         <div className="mt-8 text-center">
           <p className="text-sm text-text-muted">
             ¿Ya tienes cuenta?{' '}
-            <a
-              href="#"
+            <Link
+              to="/signin"
               className="text-primary hover:text-primary-dark font-medium relative group"
             >
               Inicia sesión aquí
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
-            </a>
+            </Link>
           </p>
         </div>
       </div>
