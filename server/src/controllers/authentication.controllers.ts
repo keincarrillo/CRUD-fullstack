@@ -34,8 +34,8 @@ export const singUp = async (req: AuthParamsReq, res: Response) => {
   } catch (err) {
     const error = err as FirebaseError
     const errorResponse = errorsResponseAuth(error)
-    if (errorResponse) return res.status(400).json({ message: errorResponse })
     console.error(error)
+    if (errorResponse) return res.status(400).json({ message: errorResponse })
     res.status(500).send(error)
   }
 }
