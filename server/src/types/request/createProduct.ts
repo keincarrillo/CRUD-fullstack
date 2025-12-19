@@ -1,4 +1,3 @@
-// src/types/request/createProduct.ts
 import type { Request } from 'express'
 import type { DocumentData } from 'firebase/firestore'
 import type { ParamsDictionary } from 'express-serve-static-core'
