@@ -9,7 +9,11 @@ const server = express()
 
 // Middlewares
 server.use(express.json())
-server.use(cors())
+server.use(
+  cors({
+    credentials: true,
+  })
+)
 server.use(cookieParser())
 server.use(morgan('dev'))
 
