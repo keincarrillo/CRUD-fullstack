@@ -9,13 +9,13 @@ type Args = {
   buttonsRef: RefObject<HTMLDivElement | null>
 }
 
-export function useGsapHomeIntro({
+export const useGsapHomeIntro = ({
   containerRef,
   titleRef,
   subtitleRef,
   featuresRef,
   buttonsRef,
-}: Args) {
+}: Args) => {
   useLayoutEffect(() => {
     const container = containerRef.current
     if (!container) return

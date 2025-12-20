@@ -9,7 +9,11 @@ type Args = {
   formRef: DivRef
 }
 
-export function useGsapAuthIntro({ containerRef, headerRef, formRef }: Args) {
+export const useGsapAuthIntro = ({
+  containerRef,
+  headerRef,
+  formRef,
+}: Args) => {
   useLayoutEffect(() => {
     const container = containerRef.current
     if (!container) return

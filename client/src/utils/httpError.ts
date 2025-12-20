@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-export function getHttpErrorMessage(
+export const getHttpErrorMessage = (
   error: unknown,
   fallback = 'Error al procesar la solicitud'
-) {
+) => {
   if (axios.isAxiosError(error)) {
     const msg =
       (error.response?.data as any)?.message || error.response?.statusText

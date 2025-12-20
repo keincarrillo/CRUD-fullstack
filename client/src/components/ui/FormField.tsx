@@ -7,7 +7,7 @@ type Props = {
   children: ReactNode
 }
 
-export default function FormField({ label, htmlFor, error, children }: Props) {
+const FormField = ({ label, htmlFor, error, children }: Props) => {
   return (
     <div>
       <label
@@ -25,3 +25,5 @@ export default function FormField({ label, htmlFor, error, children }: Props) {
     </div>
   )
 }
+
+export default FormField

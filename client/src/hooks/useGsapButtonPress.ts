@@ -3,7 +3,7 @@ import gsap from 'gsap'
 
 type BtnRef = RefObject<HTMLButtonElement> | RefObject<HTMLButtonElement | null>
 
-export function useGsapButtonPress(buttonRef: BtnRef) {
+export const useGsapButtonPress = (buttonRef: BtnRef) => {
   return useCallback(async () => {
     const btn = buttonRef.current
     if (!btn) return

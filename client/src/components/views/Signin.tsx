@@ -17,7 +17,7 @@ import { useGsapButtonPress } from '../../hooks/useGsapButtonPress'
 import { useGsapFeedback } from '../../hooks/useGsapFeedback'
 import { useGsapInputScale } from '../../hooks/useGsapInputScale'
 
-export default function Signin() {
+const Signin = () => {
   const {
     register,
     handleSubmit,
@@ -141,3 +141,5 @@ export default function Signin() {
     </AuthLayout>
   )
 }
+
+export default Signin

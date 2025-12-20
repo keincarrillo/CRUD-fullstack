@@ -3,7 +3,7 @@ import gsap from 'gsap'
 
 type DivRef = RefObject<HTMLDivElement> | RefObject<HTMLDivElement | null>
 
-export function useGsapFeedback(containerRef: DivRef) {
+export const useGsapFeedback = (containerRef: DivRef) => {
   const success = useCallback(() => {
     const el = containerRef.current
     if (!el) return

@@ -7,7 +7,7 @@ type Props = {
   containerRef?: DivRef
 }
 
-export default function AuthCard({ children, containerRef }: Props) {
+const AuthCard = ({ children, containerRef }: Props) => {
   return (
     <div
       ref={containerRef as RefObject<HTMLDivElement>}
@@ -18,3 +18,5 @@ export default function AuthCard({ children, containerRef }: Props) {
     </div>
   )
 }
+
+export default AuthCard

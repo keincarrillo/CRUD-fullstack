@@ -6,13 +6,13 @@ type Props = HomeFeature & {
   onMouseLeave?: React.MouseEventHandler<HTMLDivElement>
 }
 
-export default function FeatureCard({
+const FeatureCard = ({
   title,
   description,
   iconPath,
   onMouseEnter,
   onMouseLeave,
-}: Props) {
+}: Props) => {
   return (
     <div
       onMouseEnter={onMouseEnter}
@@ -40,3 +40,5 @@ export default function FeatureCard({
     </div>
   )
 }
+
+export default FeatureCard

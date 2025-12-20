@@ -2,7 +2,7 @@ import axios from 'axios'
 import type { SignupFormData } from '../types/signupFormType'
 import type { SigninFormData } from '../types/signinFormType'
 
-export async function signupRequest(data: SignupFormData) {
+export const signupRequest = async (data: SignupFormData) => {
   const res = await axios.post('/api/auth/signup', {
     name: data.name,
     email: data.email,
@@ -11,7 +11,7 @@ export async function signupRequest(data: SignupFormData) {
   return res.data
 }
 
-export async function signinRequest(data: SigninFormData) {
+export const signinRequest = async (data: SigninFormData) => {
   const res = await axios.post('/api/auth/signin', {
     email: data.email,
     password: data.password,
