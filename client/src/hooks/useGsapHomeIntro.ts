@@ -80,7 +80,6 @@ export function useGsapHomeIntro({
         0.6
       )
 
-    // ✅ IMPORTANTE: no retornes tl.kill() (porque “devuelve Timeline”)
     return () => {
       tl.kill()
     }

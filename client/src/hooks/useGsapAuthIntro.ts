@@ -54,7 +54,6 @@ export function useGsapAuthIntro({ containerRef, headerRef, formRef }: Args) {
         0.35
       )
 
-    // ✅ Cleanup SIN salida: solo mata la animación, NO revierte estilos
     return () => {
       tl.kill()
     }
