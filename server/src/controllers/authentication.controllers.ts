@@ -12,7 +12,10 @@ import { setDoc, doc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase/appFirebase'
 import clientRedis from '../redis/clientRedis'
 import jwt from 'jsonwebtoken'
+import { Error as ErrorToken } from '../types/erros/errorsReq/errorsToken'
+import { Error as ErrorAuth } from '../types/erros/errorsResFirebase/errorsResponseAuth'
 import { validateSigninBody } from '../utils/validateSigninBody'
+import type { MyJwtPayload } from '../types/request/validateTokenReq'
 
 export const singUp = async (req: AuthParamsReq, res: Response) => {
   const validationError = validateSignupBody(req.body)
@@ -92,4 +95,53 @@ export const singIn = async (req: AuthParamsReq, res: Response) => {
     console.error(error)
     res.status(500).send(error)
   }
+}
+
+export const verify = async (req: Request, res: Response) => {
+  const cookies = (req as any).cookies ?? {}
+  const token = cookies.token as string | undefined
+
+  if (!token)
+    return res.status(401).json({ message: ErrorToken.NO_AUTHENTICATION })
+
+  try {
+    const payload = jwt.verify(
+      token,
+      process.env.JWT_SECRET as string
+    ) as MyJwtPayload
+
+    const rawSession = await clientRedis.get(`sess:${payload.sid}`)
+    if (!rawSession)
+      return res.status(401).json({ message: ErrorToken.SESSION_EXPIRED })
+
+    const session = JSON.parse(rawSession)
+    const userSnap = await getDoc(doc(db, `users/${session.uid}`))
+
+    if (!userSnap.exists())
+      return res.status(404).json({ message: ErrorAuth.NO_EXISTING_USER })
+
+    return res.sendStatus(200)
+  } catch (error) {
+    console.error('Error en verificar token:', error)
+    return res.status(401).json({ message: ErrorToken.INVALID_TOKEN })
+  }
+}
+
+export const signOut = async (req: Request, res: Response) => {
+  const cookies = (req as any).cookies ?? {}
+  const token = cookies.token as string | undefined
+
+  if (token) {
+    try {
+      const payload = jwt.verify(
+        token,
+        process.env.JWT_SECRET as string
+      ) as MyJwtPayload
+      await clientRedis.del(`sess:${payload.sid}`)
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error)
+    }
+  }
+
+  res.clearCookie('token').sendStatus(200)
 }
