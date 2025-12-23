@@ -1,7 +1,7 @@
 import type { SignupFormData } from '../../types/signupFormType'
 import { useForm } from 'react-hook-form'
 import { useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import AuthLayout from '../auth/AuthLayout'
 import AuthCard from '../auth/AuthCard'
@@ -18,6 +18,8 @@ import { useGsapFeedback } from '../../hooks/useGsapFeedback'
 import { useGsapInputScale } from '../../hooks/useGsapInputScale'
 
 const Signup = () => {
+  const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
@@ -38,7 +40,7 @@ const Signup = () => {
   const press = useGsapButtonPress(buttonRef)
   const { success, errorShake } = useGsapFeedback(containerRef)
 
-  useGsapAuthIntro({ containerRef, headerRef, formRef }) // 👈 sin iconRef
+  useGsapAuthIntro({ containerRef, headerRef, formRef })
 
   const onSubmit = async (data: SignupFormData) => {
     setApiError('')
@@ -50,6 +52,7 @@ const Signup = () => {
       await signupRequest(data)
       setApiSuccess(true)
       success()
+      navigate('/signin', { replace: true })
     } catch (err) {
       setApiError(getHttpErrorMessage(err, 'Error al crear la cuenta'))
       errorShake()
@@ -159,7 +162,7 @@ const Signup = () => {
               ref={buttonRef}
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-primary hover:bg-primary-dark text-white py-3 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden group"
+              className="w-full bg-primary hover:bg-primary-dark hover:cursor-pointer text-white py-3 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden group"
             >
               <span className="relative z-10">
                 {isSubmitting ? 'Creando cuenta...' : 'Crear cuenta'}
