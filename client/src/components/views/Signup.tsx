@@ -2,7 +2,6 @@ import type { SignupFormData } from '../../types/signupFormType'
 import { useForm } from 'react-hook-form'
 import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../../context/AuthContext'
 
 import AuthLayout from '../auth/AuthLayout'
 import AuthCard from '../auth/AuthCard'
@@ -16,10 +15,10 @@ import { useGsapAuthIntro } from '../../hooks/useGsapAuthIntro'
 import { useGsapButtonPress } from '../../hooks/useGsapButtonPress'
 import { useGsapFeedback } from '../../hooks/useGsapFeedback'
 import { useGsapInputScale } from '../../hooks/useGsapInputScale'
+import { signupRequest } from '../../services/auth.service'
 
 const Signup = () => {
   const navigate = useNavigate()
-  const { signup } = useAuth()
 
   const {
     register,
@@ -50,7 +49,7 @@ const Signup = () => {
     await press()
 
     try {
-      await signup(data)
+      await signupRequest(data)
       setApiSuccess(true)
       success()
       navigate('/signin', { replace: true })

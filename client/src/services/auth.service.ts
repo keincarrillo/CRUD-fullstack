@@ -11,6 +11,7 @@ export const signupRequest = async (data: SignupFormData) => {
     name: data.name,
     email: data.email,
     password: data.password,
+    rol: 'admin', // Provisional admin
   })
   return res.data
 }

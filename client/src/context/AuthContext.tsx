@@ -6,41 +6,38 @@ import {
   type ReactNode,
 } from 'react'
 import type { SigninFormData } from '../types/signinFormType'
-import type { SignupFormData } from '../types/signupFormType'
 import {
   signinRequest,
-  signupRequest,
   verifyAuth,
   signout as signoutReq,
 } from '../services/auth.service'
 
-export type AuthUser = {
+export interface User {
   uid: string
   email: string
   name: string
   rol: string
 }
 
-type AuthContextType = {
-  user: AuthUser | null
+interface AuthContextType {
+  user: User | null
   loading: boolean
   isAuthenticated: boolean
-  refresh: () => Promise<void>
   signin: (data: SigninFormData) => Promise<void>
-  signup: (data: SignupFormData) => Promise<void>
   signout: () => Promise<void>
+  refresh: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const useAuth = () => {
   const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error('useAuth debe ser usado dentro de AuthProvider')
+  if (!ctx) throw new Error('useAuth debe ser usado dentro de un AuthProvider')
   return ctx
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<AuthUser | null>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
   const refresh = async () => {
@@ -49,22 +46,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(me)
     } catch {
       setUser(null)
-    } finally {
-      setLoading(false)
     }
   }
 
   useEffect(() => {
-    refresh()
+    ;(async () => {
+      await refresh()
+      setLoading(false)
+    })()
   }, [])
 
   const signin = async (data: SigninFormData) => {
-    const me = await signinRequest(data)
-    setUser(me)
-  }
-
-  const signup = async (data: SignupFormData) => {
-    await signupRequest(data)
+    await signinRequest(data)
+    await refresh()
   }
 
   const signout = async () => {
@@ -78,10 +72,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         user,
         loading,
         isAuthenticated: !!user,
-        refresh,
         signin,
-        signup,
         signout,
+        refresh,
       }}
     >
       {children}
