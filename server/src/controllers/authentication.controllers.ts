@@ -1,4 +1,4 @@
-import type { Response } from 'express'
+import type { RequestHandler, Response } from 'express'
 import type { FirebaseError } from 'firebase/app'
 import type { AuthParamsReq } from '../types/request/authParams'
 import {
@@ -97,12 +97,12 @@ export const singIn = async (req: AuthParamsReq, res: Response) => {
   }
 }
 
-export const verify = async (req: Request, res: Response) => {
+export const verify: RequestHandler = async (req, res) => {
   const cookies = (req as any).cookies ?? {}
   const token = cookies.token as string | undefined
 
   if (!token)
-    return res.status(401).json({ message: ErrorToken.NO_AUTHENTICATION })
+    return void res.status(401).json({ message: ErrorToken.NO_AUTHENTICATION })
 
   try {
     const payload = jwt.verify(
@@ -112,22 +112,31 @@ export const verify = async (req: Request, res: Response) => {
 
     const rawSession = await clientRedis.get(`sess:${payload.sid}`)
     if (!rawSession)
-      return res.status(401).json({ message: ErrorToken.SESSION_EXPIRED })
+      return void res.status(401).json({ message: ErrorToken.SESSION_EXPIRED })
 
     const session = JSON.parse(rawSession)
     const userSnap = await getDoc(doc(db, `users/${session.uid}`))
 
     if (!userSnap.exists())
-      return res.status(404).json({ message: ErrorAuth.NO_EXISTING_USER })
+      return void res.status(404).json({ message: ErrorAuth.NO_EXISTING_USER })
 
-    return res.sendStatus(200)
+    // si solo quieres OK:
+    return void res.sendStatus(200)
+
+    // si quieres devolver user:
+    // return void res.status(200).json({
+    //   uid: session.uid,
+    //   name: userSnap.data()?.name,
+    //   email: userSnap.data()?.email,
+    //   rol: userSnap.data()?.rol ?? session.rol,
+    // })
   } catch (error) {
     console.error('Error en verificar token:', error)
-    return res.status(401).json({ message: ErrorToken.INVALID_TOKEN })
+    return void res.status(401).json({ message: ErrorToken.INVALID_TOKEN })
   }
 }
 
-export const signOut = async (req: Request, res: Response) => {
+export const signOut: RequestHandler = async (req, res) => {
   const cookies = (req as any).cookies ?? {}
   const token = cookies.token as string | undefined
 
@@ -143,5 +152,6 @@ export const signOut = async (req: Request, res: Response) => {
     }
   }
 
-  res.clearCookie('token').sendStatus(200)
+  res.clearCookie('token')
+  return void res.sendStatus(200)
 }
