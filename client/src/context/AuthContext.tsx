@@ -1,66 +1,75 @@
 import {
   createContext,
   useContext,
-  useState,
   useEffect,
+  useState,
   type ReactNode,
 } from 'react'
-import { verifyAuth, signout } from '../services/auth.service'
+import type { SigninFormData } from '../types/signinFormType'
+import type { SignupFormData } from '../types/signupFormType'
+import {
+  signinRequest,
+  signupRequest,
+  verifyAuth,
+  signout as signoutReq,
+} from '../services/auth.service'
 
-interface User {
+export type AuthUser = {
+  uid: string
   email: string
   name: string
   rol: string
 }
 
-interface AuthContextType {
-  user: User | null
+type AuthContextType = {
+  user: AuthUser | null
   loading: boolean
-  signin: (userData: User) => void
-  signout: () => Promise<void>
   isAuthenticated: boolean
+  refresh: () => Promise<void>
+  signin: (data: SigninFormData) => Promise<void>
+  signup: (data: SignupFormData) => Promise<void>
+  signout: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const useAuth = () => {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth debe ser usado dentro de un AuthProvider')
-  }
-  return context
+  const ctx = useContext(AuthContext)
+  if (!ctx) throw new Error('useAuth debe ser usado dentro de AuthProvider')
+  return ctx
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const userData = await verifyAuth()
-        setUser(userData)
-      } catch (error) {
-        setUser(null)
-      } finally {
-        setLoading(false)
-      }
+  const refresh = async () => {
+    try {
+      const me = await verifyAuth()
+      setUser(me)
+    } catch {
+      setUser(null)
+    } finally {
+      setLoading(false)
     }
-
-    checkAuth()
-  }, [])
-
-  const signin = (userData: User) => {
-    setUser(userData)
   }
 
-  const signoutHandler = async () => {
-    try {
-      await signout()
-      setUser(null)
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error)
-    }
+  useEffect(() => {
+    refresh()
+  }, [])
+
+  const signin = async (data: SigninFormData) => {
+    const me = await signinRequest(data)
+    setUser(me)
+  }
+
+  const signup = async (data: SignupFormData) => {
+    await signupRequest(data)
+  }
+
+  const signout = async () => {
+    await signoutReq()
+    setUser(null)
   }
 
   return (
@@ -68,9 +77,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user,
         loading,
-        signin,
-        signout: signoutHandler,
         isAuthenticated: !!user,
+        refresh,
+        signin,
+        signup,
+        signout,
       }}
     >
       {children}

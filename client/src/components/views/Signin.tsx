@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
 import AuthLayout from '../auth/AuthLayout'
 import AuthCard from '../auth/AuthCard'
@@ -10,7 +11,6 @@ import Alert from '../ui/Alert'
 import FormField from '../ui/FormField'
 
 import { EMAIL_REGEX, PASSWORD_STYLE } from '../constants/validation'
-import { signinRequest } from '../../services/auth.service'
 import { getHttpErrorMessage } from '../../utils/httpError'
 
 import { useGsapAuthIntro } from '../../hooks/useGsapAuthIntro'
@@ -19,6 +19,7 @@ import { useGsapFeedback } from '../../hooks/useGsapFeedback'
 import { useGsapInputScale } from '../../hooks/useGsapInputScale'
 
 const Signin = () => {
+  const { signin } = useAuth()
   const navigate = useNavigate()
   const {
     register,
@@ -45,7 +46,7 @@ const Signin = () => {
     await press()
 
     try {
-      await signinRequest(data)
+      await signin(data)
       success()
       navigate('/dashboard', { replace: true })
     } catch (err) {

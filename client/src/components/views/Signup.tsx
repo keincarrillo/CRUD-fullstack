@@ -2,6 +2,7 @@ import type { SignupFormData } from '../../types/signupFormType'
 import { useForm } from 'react-hook-form'
 import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
 import AuthLayout from '../auth/AuthLayout'
 import AuthCard from '../auth/AuthCard'
@@ -9,7 +10,6 @@ import Alert from '../ui/Alert'
 import FormField from '../ui/FormField'
 
 import { EMAIL_REGEX, PASSWORD_STYLE } from '../constants/validation'
-import { signupRequest } from '../../services/auth.service'
 import { getHttpErrorMessage } from '../../utils/httpError'
 
 import { useGsapAuthIntro } from '../../hooks/useGsapAuthIntro'
@@ -19,6 +19,7 @@ import { useGsapInputScale } from '../../hooks/useGsapInputScale'
 
 const Signup = () => {
   const navigate = useNavigate()
+  const { signup } = useAuth()
 
   const {
     register,
@@ -49,7 +50,7 @@ const Signup = () => {
     await press()
 
     try {
-      await signupRequest(data)
+      await signup(data)
       setApiSuccess(true)
       success()
       navigate('/signin', { replace: true })
