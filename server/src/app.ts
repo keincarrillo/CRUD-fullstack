@@ -31,7 +31,7 @@ server.use(
   })
 )
 
-server.options('*', cors()) // preflight
+server.options(/.*/, cors())
 server.use(cookieParser())
 server.use(morgan('dev'))
 
