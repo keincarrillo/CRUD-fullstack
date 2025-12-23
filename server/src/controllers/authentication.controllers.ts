@@ -120,16 +120,7 @@ export const verify: RequestHandler = async (req, res) => {
     if (!userSnap.exists())
       return void res.status(404).json({ message: ErrorAuth.NO_EXISTING_USER })
 
-    // si solo quieres OK:
     return void res.sendStatus(200)
-
-    // si quieres devolver user:
-    // return void res.status(200).json({
-    //   uid: session.uid,
-    //   name: userSnap.data()?.name,
-    //   email: userSnap.data()?.email,
-    //   rol: userSnap.data()?.rol ?? session.rol,
-    // })
   } catch (error) {
     console.error('Error en verificar token:', error)
     return void res.status(401).json({ message: ErrorToken.INVALID_TOKEN })
