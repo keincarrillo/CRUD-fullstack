@@ -7,18 +7,34 @@ import cookieParser from 'cookie-parser'
 
 const server = express()
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://crud-fullstack-dc4df.web.app',
+  'https://crud-fullstack-dc4df.firebaseapp.com'
+]
+
 // Middlewares
 server.use(express.json())
+
 server.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true)
+
+      if (allowedOrigins.includes(origin)) return cb(null, true)
+
+      return cb(new Error(`CORS blocked for origin: ${origin}`))
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
   })
 )
+
+server.options('*', cors()) // preflight
 server.use(cookieParser())
 server.use(morgan('dev'))
 
-// isAlive?
 server.get('/', (req, res) => {
   res.sendStatus(200)
 })
