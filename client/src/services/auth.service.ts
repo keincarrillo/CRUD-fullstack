@@ -11,7 +11,7 @@ export const signupRequest = async (data: SignupFormData) => {
     name: data.name,
     email: data.email,
     password: data.password,
-    rol: 'admin' // Provisional admin
+    rol: data.rol,
   })
   return res.data
 }
@@ -19,7 +19,7 @@ export const signupRequest = async (data: SignupFormData) => {
 export const signinRequest = async (data: SigninFormData) => {
   const res = await axios.post(`${API_URL}/signin`, {
     email: data.email,
-    password: data.password
+    password: data.password,
   })
   return res.data
 }
