@@ -10,7 +10,7 @@ const server = express()
 const allowedOrigins = [
   'http://localhost:5173',
   'https://crud-fullstack-dc4df.web.app',
-  'https://crud-fullstack-dc4df.firebaseapp.com'
+  'https://crud-fullstack-dc4df.firebaseapp.com',
 ]
 
 // Middlewares
@@ -27,7 +27,7 @@ server.use(
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 )
 
