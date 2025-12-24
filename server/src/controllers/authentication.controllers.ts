@@ -166,10 +166,7 @@ export const signOut: RequestHandler = async (req, res) => {
     }
   }
 
-  res.clearCookie('token', {
-    sameSite: isProd ? 'none' : 'lax',
-    secure: isProd,
-    path: '/',
-  })
+  res.clearCookie('token', { path: '/', sameSite: 'none', secure: true })
+  res.clearCookie('token', { path: '/', sameSite: 'lax', secure: false })
   return void res.sendStatus(200)
 }
