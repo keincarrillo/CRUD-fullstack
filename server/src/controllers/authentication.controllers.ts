@@ -17,8 +17,6 @@ import { Error as ErrorAuth } from '../types/erros/errorsResFirebase/errorsRespo
 import { validateSigninBody } from '../utils/validateSigninBody'
 import type { MyJwtPayload } from '../types/request/validateTokenReq'
 
-const isProd = process.env.NODE_ENV === 'production'
-
 export const singUp: RequestHandler = async (req, res) => {
   const validationError = validateSignupBody((req as AuthParamsReq).body)
   if (validationError)
@@ -95,8 +93,8 @@ export const singIn: RequestHandler = async (req, res) => {
     return res
       .cookie('token', token, {
         httpOnly: true,
-        sameSite: isProd ? 'none' : 'lax',
-        secure: isProd,
+        sameSite: 'none',
+        secure: true,
         maxAge: 1000 * 60 * 60 * 24,
         path: '/',
       })
@@ -166,7 +164,10 @@ export const signOut: RequestHandler = async (req, res) => {
     }
   }
 
-  res.clearCookie('token', { path: '/', sameSite: 'none', secure: true })
-  res.clearCookie('token', { path: '/', sameSite: 'lax', secure: false })
+  res.clearCookie('token', {
+    path: '/',
+    sameSite: 'none',
+    secure: true,
+  })
   return void res.sendStatus(200)
 }

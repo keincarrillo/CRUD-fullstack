@@ -9,6 +9,7 @@ const server = express()
 
 const allowedOrigins = [
   'http://localhost:5173',
+  'https://agile-laughter-production.up.railway.app',
   'https://crud-fullstack-production.up.railway.app',
 ]
 
@@ -30,7 +31,7 @@ server.use(
   })
 )
 
-server.options(/.*/, cors())
+server.options('*', cors())
 server.use(cookieParser())
 server.use(morgan('dev'))
 
