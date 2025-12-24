@@ -2,7 +2,7 @@ import { X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import type { ProductFormData } from '../../types/productType'
 import FormField from '../ui/FormField'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import gsap from 'gsap'
 
 type Props = {
@@ -18,16 +18,23 @@ const ProductModal = ({
   onClose,
   onSubmit,
   initialData,
-  title
+  title,
 }: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset
+    reset,
   } = useForm<ProductFormData>({
-    defaultValues: initialData
+    defaultValues: initialData,
   })
+
+  // Actualizar el formulario cuando cambien los datos iniciales
+  useEffect(() => {
+    if (initialData) {
+      reset(initialData)
+    }
+  }, [initialData, reset])
 
   const onInputFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
     gsap.to(e.target, { scale: 1.02, duration: 0.2, ease: 'power2.out' })
@@ -91,7 +98,7 @@ const ProductModal = ({
                 type="text"
                 {...register('nombre', {
                   required: 'El nombre es obligatorio',
-                  minLength: { value: 3, message: 'Mínimo 3 caracteres' }
+                  minLength: { value: 3, message: 'Mínimo 3 caracteres' },
                 })}
                 onFocus={onInputFocus}
                 onBlur={onInputBlur}
@@ -109,7 +116,7 @@ const ProductModal = ({
                 id="marca"
                 type="text"
                 {...register('marca', {
-                  required: 'La marca es obligatoria'
+                  required: 'La marca es obligatoria',
                 })}
                 onFocus={onInputFocus}
                 onBlur={onInputBlur}
@@ -131,7 +138,7 @@ const ProductModal = ({
                   {...register('precio', {
                     required: 'El precio es obligatorio',
                     min: { value: 0, message: 'Debe ser mayor a 0' },
-                    valueAsNumber: true
+                    valueAsNumber: true,
                   })}
                   onFocus={onInputFocus}
                   onBlur={onInputBlur}
@@ -151,7 +158,7 @@ const ProductModal = ({
                   {...register('stock', {
                     required: 'El stock es obligatorio',
                     min: { value: 0, message: 'Debe ser mayor o igual a 0' },
-                    valueAsNumber: true
+                    valueAsNumber: true,
                   })}
                   onFocus={onInputFocus}
                   onBlur={onInputBlur}
@@ -170,7 +177,7 @@ const ProductModal = ({
                 id="descripcion"
                 {...register('descripcion', {
                   required: 'La descripción es obligatoria',
-                  minLength: { value: 10, message: 'Mínimo 10 caracteres' }
+                  minLength: { value: 10, message: 'Mínimo 10 caracteres' },
                 })}
                 onFocus={onTextareaFocus}
                 onBlur={onTextareaBlur}

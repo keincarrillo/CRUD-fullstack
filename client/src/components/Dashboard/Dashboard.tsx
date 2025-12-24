@@ -124,12 +124,21 @@ const Dashboard = () => {
     try {
       setError('')
       setSuccess('')
+
+      // Eliminar del servidor
       await deleteProduct(id)
+
+      // Actualizar el estado local inmediatamente
+      setProducts(prevProducts =>
+        prevProducts.filter(product => product.docId !== id)
+      )
+
       setSuccess('Producto eliminado exitosamente')
-      await loadProducts()
       setTimeout(() => setSuccess(''), 3000)
     } catch (err) {
       setError(getHttpErrorMessage(err, 'Error al eliminar el producto'))
+      // Si falla, recargar la lista para mantener sincronización
+      await loadProducts()
     }
   }
 
