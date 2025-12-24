@@ -1,73 +1,86 @@
-# React + TypeScript + Vite
+# Cliente - Sistema de Gestión de Productos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend con React 19, TypeScript, TailwindCSS y animaciones GSAP.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 19 + TypeScript
+- Vite
+- TailwindCSS 4
+- React Hook Form
+- GSAP (animaciones)
+- Axios
+- React Router 7
 
-## React Compiler
+## Inicio
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+bun install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Crea `.env`:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_API_URL=http://url-de-la-api/api
 ```
+
+```bash
+# Desarrollo
+bun run dev
+
+# Build
+bun run build
+```
+
+## Estructura
+
+```
+src/
+├── components/
+│   ├── Dashboard/          # Vista principal
+│   ├── auth/               # Autenticación
+│   ├── products/           # CRUD productos
+│   ├── ui/                 # Componentes reutilizables
+│   └── views/              # Páginas
+├── context/
+│   └── AuthContext.tsx     # Estado global auth
+├── hooks/                  # Custom hooks GSAP
+├── services/               # API calls
+├── types/                  # TypeScript types
+└── utils/                  # Utilidades
+```
+
+## Personalización
+
+Colores en `src/index.css`:
+
+```css
+@theme {
+  --color-primary: #2563eb;
+  --color-background: #eef2ff;
+  --color-card: #ffffff;
+  /* ... */
+}
+```
+
+## Context de Auth
+
+```tsx
+import { useAuth } from './context/AuthContext'
+
+function Component() {
+  const { user, signin, signout } = useAuth()
+  // ...
+}
+```
+
+## Scripts
+
+- `dev` - Servidor de desarrollo
+- `build` - Build producción
+- `preview` - Preview del build
+- `lint` - Ejecutar linter
+
+## Licencia
+
+MIT
