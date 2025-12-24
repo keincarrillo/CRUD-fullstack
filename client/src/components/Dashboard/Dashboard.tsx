@@ -7,7 +7,7 @@ import {
   getProducts,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
 } from '../../services/product.service'
 import { getHttpErrorMessage } from '../../utils/httpError'
 import ProductCard from '../products/ProductCard'
@@ -30,19 +30,24 @@ const Dashboard = () => {
   const headerRef = useRef<HTMLDivElement>(null)
   const productsRef = useRef<HTMLDivElement>(null)
 
+  // Permisos basados en rol
+  const canCreate = user?.rol === 'admin'
+  const canEdit = user?.rol === 'admin'
+  const canDelete = user?.rol === 'admin' || user?.rol === 'moderator'
+
   useEffect(() => {
     loadProducts()
   }, [])
 
   useEffect(() => {
-    if (headerRef.current && productsRef.current) {
+    if (headerRef.current && productsRef.current && products.length > 0) {
       const tl = gsap.timeline({ defaults: { ease: 'power2.out' } })
 
       tl.from(headerRef.current, {
         opacity: 0,
         y: -20,
         duration: 0.5,
-        clearProps: 'opacity,transform'
+        clearProps: 'opacity,transform',
       }).from(
         productsRef.current.children,
         {
@@ -50,7 +55,7 @@ const Dashboard = () => {
           y: 20,
           stagger: 0.1,
           duration: 0.4,
-          clearProps: 'opacity,transform'
+          clearProps: 'opacity,transform',
         },
         0.3
       )
@@ -70,6 +75,11 @@ const Dashboard = () => {
   }
 
   const handleCreateProduct = async (data: ProductFormData) => {
+    if (!canCreate) {
+      setError('No tienes permisos para crear productos')
+      return
+    }
+
     try {
       setError('')
       setSuccess('')
@@ -85,6 +95,11 @@ const Dashboard = () => {
   const handleUpdateProduct = async (data: ProductFormData) => {
     if (!editingProduct) return
 
+    if (!canEdit) {
+      setError('No tienes permisos para editar productos')
+      return
+    }
+
     try {
       setError('')
       setSuccess('')
@@ -99,6 +114,11 @@ const Dashboard = () => {
   }
 
   const handleDeleteProduct = async (id: string) => {
+    if (!canDelete) {
+      setError('No tienes permisos para eliminar productos')
+      return
+    }
+
     if (!confirm('¿Estás seguro de eliminar este producto?')) return
 
     try {
@@ -114,6 +134,10 @@ const Dashboard = () => {
   }
 
   const handleEditClick = (product: Product) => {
+    if (!canEdit) {
+      setError('No tienes permisos para editar productos')
+      return
+    }
     setEditingProduct(product)
     setIsModalOpen(true)
   }
@@ -156,16 +180,21 @@ const Dashboard = () => {
               <p className="text-text-muted">
                 Bienvenido, <span className="font-medium">{user?.name}</span>
               </p>
+              <p className="text-sm text-text-muted mt-1">
+                Rol: <span className="font-medium capitalize">{user?.rol}</span>
+              </p>
             </div>
 
             <div className="flex gap-3">
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
-              >
-                <Plus className="w-5 h-5" />
-                Nuevo Producto
-              </button>
+              {canCreate && (
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  <Plus className="w-5 h-5" />
+                  Nuevo Producto
+                </button>
+              )}
               <button
                 onClick={handleSignout}
                 className="flex items-center gap-2 px-6 py-3 border border-border hover:bg-error hover:text-white hover:border-error text-text-main rounded-lg font-semibold transition-all duration-200"
@@ -187,14 +216,18 @@ const Dashboard = () => {
               No hay productos
             </h3>
             <p className="text-text-muted mb-6">
-              Comienza agregando tu primer producto
+              {canCreate
+                ? 'Comienza agregando tu primer producto'
+                : 'No hay productos disponibles para mostrar'}
             </p>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold transition-all duration-200"
-            >
-              Agregar Producto
-            </button>
+            {canCreate && (
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold transition-all duration-200"
+              >
+                Agregar Producto
+              </button>
+            )}
           </div>
         ) : (
           <div
@@ -207,29 +240,33 @@ const Dashboard = () => {
                 product={product}
                 onEdit={handleEditClick}
                 onDelete={handleDeleteProduct}
+                canEdit={canEdit}
+                canDelete={canDelete}
               />
             ))}
           </div>
         )}
       </div>
 
-      <ProductModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onSubmit={editingProduct ? handleUpdateProduct : handleCreateProduct}
-        initialData={
-          editingProduct
-            ? {
-                nombre: editingProduct.nombre,
-                marca: editingProduct.marca,
-                precio: editingProduct.precio,
-                descripcion: editingProduct.descripcion,
-                stock: editingProduct.stock
-              }
-            : undefined
-        }
-        title={editingProduct ? 'Editar Producto' : 'Nuevo Producto'}
-      />
+      {canCreate && (
+        <ProductModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSubmit={editingProduct ? handleUpdateProduct : handleCreateProduct}
+          initialData={
+            editingProduct
+              ? {
+                  nombre: editingProduct.nombre,
+                  marca: editingProduct.marca,
+                  precio: editingProduct.precio,
+                  descripcion: editingProduct.descripcion,
+                  stock: editingProduct.stock,
+                }
+              : undefined
+          }
+          title={editingProduct ? 'Editar Producto' : 'Nuevo Producto'}
+        />
+      )}
     </div>
   )
 }

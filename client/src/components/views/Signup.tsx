@@ -33,7 +33,6 @@ const Signup = () => {
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   const [apiError, setApiError] = useState('')
-  const [apiSuccess, setApiSuccess] = useState(false)
 
   const password = watch('password', '')
   const { onFocus, onBlur } = useGsapInputScale()
@@ -44,13 +43,11 @@ const Signup = () => {
 
   const onSubmit = async (data: SignupFormData) => {
     setApiError('')
-    setApiSuccess(false)
 
     await press()
 
     try {
       await signupRequest(data)
-      setApiSuccess(true)
       success()
       navigate('/signin', { replace: true })
     } catch (err) {
@@ -69,9 +66,6 @@ const Signup = () => {
           <p className="text-text-muted">Regístrate para comenzar</p>
         </div>
 
-        {apiSuccess && (
-          <Alert variant="success" message="¡Cuenta creada exitosamente!" />
-        )}
         {apiError && <Alert variant="error" message={apiError} />}
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -115,6 +109,21 @@ const Signup = () => {
                 className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 outline-none bg-primary-soft text-text-main focus:bg-card"
                 placeholder="tu@email.com"
               />
+            </FormField>
+
+            <FormField label="Rol" htmlFor="rol" error={errors.rol?.message}>
+              <select
+                id="rol"
+                {...register('rol', {
+                  required: 'Debes seleccionar un rol',
+                })}
+                className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 outline-none bg-primary-soft text-text-main focus:bg-card cursor-pointer"
+              >
+                <option value="">Selecciona un rol</option>
+                <option value="user">Usuario</option>
+                <option value="admin">Administrador</option>
+                <option value="moderator">Moderador</option>
+              </select>
             </FormField>
 
             <FormField
