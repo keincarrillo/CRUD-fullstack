@@ -9,8 +9,7 @@ const server = express()
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://crud-fullstack-dc4df.web.app',
-  'https://crud-fullstack-dc4df.firebaseapp.com',
+  'https://crud-fullstack-production.up.railway.app',
 ]
 
 // Middlewares
